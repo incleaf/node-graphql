@@ -1,0 +1,24 @@
+{
+  "name": "node-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "url": "git+https://github.com/incleaf/node-graphql.git",
+    "type": "git"
+  },
+  "author": "Hyeonsu Lee <incleaf@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/incleaf/node-graphql/issues"
+  },
+  "homepage": "https://github.com/incleaf/node-graphql#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "express-graphql": "^0.6.1",
+    "graphql": "^0.8.2"
+  }
+}
