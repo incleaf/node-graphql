@@ -12,10 +12,11 @@ const {
   GraphQLID,
   GraphQLList,
   GraphQLNonNull,
-} = require('graphql');
+} = require('graphql')
+const { Article, Comment } = require('./database')
 
 
-const Article = new GraphQLObjectType({
+const ArticleType = new GraphQLObjectType({
   name: 'Article',
   description: 'Article',
   fields: () => ({
@@ -42,37 +43,32 @@ const Article = new GraphQLObjectType({
   })
 });
 
-const Query = new GraphQLObjectType({
+const QueryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     article: {
-      type: Article,
-      description: 'Article',
+      type: ArticleType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: ({ database }, { id }) => {
-        const article = database.articles.find(v => v.id === Number(id))
-
-        if (!article) {
-          return 'Article can not be found'
-        }
-
-        return article
-      }
+      resolve: (root, {id}) => Article
+        .findById(id)
+        .then(article => {
+          console.log(article)
+          return article
+        }),
     },
     articles: {
-      type: new GraphQLList(Article),
-      description: 'Articles',
+      type: new GraphQLList(ArticleType),
       resolve: ({ database }) => database.articles,
     }
-  })
+  }),
 });
 
-const myTestSchema = new GraphQLSchema({
-  query: Query,
+const rootSchema = new GraphQLSchema({
+  query: QueryType,
   // mutation: TestMutationType,
   // subscription: TestSubscriptionType
 });
 
-module.exports = myTestSchema;
+module.exports = rootSchema;

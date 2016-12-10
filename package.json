@@ -21,6 +21,8 @@
     "express": "^4.14.0",
     "express-graphql": "^0.6.1",
     "graphql": "^0.8.2",
-    "pm2": "^2.1.6"
+    "pm2": "^2.1.6",
+    "sequelize": "^3.27.0",
+    "sqlite3": "^3.1.8"
   }
 }
