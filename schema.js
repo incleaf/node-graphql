@@ -14,61 +14,50 @@ const {
   GraphQLNonNull,
 } = require('graphql')
 const { Article, Comment } = require('./database')
+const { resolver, attributeFields, defaultArgs } = require('graphql-sequelize')
 
 
 const ArticleType = new GraphQLObjectType({
   name: 'Article',
-  description: 'Article',
-  fields: () => ({
-    id: {
-      type: GraphQLID,
-      description: 'ID field from Article type',
-      resolve: (root) => root.id,
-    },
-    title: {
-      type: GraphQLString,
-      description: 'Title field from Article type',
-      resolve: (root) => root.title,
-    },
-    content: {
-      type: GraphQLString,
-      description: 'Content filed from Article type',
-      resolve: (root) => root.content,
-    },
-    author: {
-      type: GraphQLString,
-      description: 'Author filed from Article type',
-      resolve: (root) => root.author,
-    }
-  })
-});
+  fields: () => attributeFields(Article)  // resolve: () => resolver(Article),
+})
 
-const QueryType = new GraphQLObjectType({
-  name: 'Query',
+const CommentType = new GraphQLObjectType({
+  name: 'Comment',
+  fields: () => attributeFields(Comment)
+})
+
+const RootQueryType = new GraphQLObjectType({
+  name: 'RootQuery',
   fields: () => ({
     article: {
       type: ArticleType,
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
-      },
-      resolve: (root, {id}) => Article
-        .findById(id)
-        .then(article => {
-          console.log(article)
-          return article
-        }),
+      args: defaultArgs(Article),
+      resolve: (root, { id }) => Article.findById(id),
     },
     articles: {
       type: new GraphQLList(ArticleType),
-      resolve: ({ database }) => database.articles,
+      resolve: () => Article.findAll(),
+    },
+    comment: {
+      type: CommentType,
+      args: defaultArgs(Comment),
+      resolve: (root, { id }) => Comment.findById(id),
+    },
+    comments: {
+      type: new GraphQLList(CommentType),
+      args: Object.assign({}, defaultArgs(Comment), {
+        articleId: { type: GraphQLID },
+      }),
+      resolve: (root, { articleId }) => Comment.findAll({ where: { articleId } }),
     }
   }),
-});
+})
 
 const rootSchema = new GraphQLSchema({
-  query: QueryType,
+  query: RootQueryType,
   // mutation: TestMutationType,
   // subscription: TestSubscriptionType
-});
+})
 
-module.exports = rootSchema;
+module.exports = rootSchema
