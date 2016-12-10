@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start index.js --watch"
   },
   "repository": {
     "url": "git+https://github.com/incleaf/node-graphql.git",
@@ -19,6 +20,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "express-graphql": "^0.6.1",
-    "graphql": "^0.8.2"
+    "graphql": "^0.8.2",
+    "pm2": "^2.1.6"
   }
 }
