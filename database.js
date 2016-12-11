@@ -5,19 +5,18 @@ const seq = new Sequelize({
 });
 
 const Article = seq.define('articles', {
-  // id: { type: Sequelize.INTEGER, primaryKey: true },
   author: Sequelize.STRING,
   title: Sequelize.STRING,
   content: Sequelize.STRING,
 })
 
 const Comment = seq.define('comments', {
-  // id: { type: Sequelize.INTEGER, primaryKey: true },
   author: Sequelize.STRING,
   content: Sequelize.STRING,
 })
 
 Article.Comments = Article.hasMany(Comment, { foreignKey: 'articleId' })
+
 Article.sync({ force: true })
 Comment.sync({ force: true }).then(() => {
   generateDummyData()
