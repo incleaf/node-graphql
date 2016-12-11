@@ -24,6 +24,7 @@
     "graphql-relay": "^0.4.4",
     "graphql-sequelize": "^4.0.5",
     "pm2": "^2.1.6",
+    "react-relay": "^0.9.3",
     "sequelize": "^3.27.0",
     "sqlite3": "^3.1.8"
   }
