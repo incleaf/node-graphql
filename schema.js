@@ -66,10 +66,10 @@ const ArticleType = new GraphQLObjectType({
 //   }),
 // })
 
-// const {
-//   connectionType: articleConnection,
-//   edgeType: ArticleEdge,
-// } = connectionDefinitions({ name: 'Article', nodeType: ArticleType })
+const {
+  connectionType: articleConnection,
+  edgeType: ArticleEdge,
+} = connectionDefinitions({ name: 'Article', nodeType: ArticleType })
 
 // const CommentType = new GraphQLObjectType({
 //   name: 'Comment',
@@ -97,15 +97,14 @@ const RootQueryType = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: (root, { id }) => {
-        console.log(id)
-        return Article.findById(id).then(instance => instance.get({ pure: true }));
+        return Article.findById(id).then(instance => instance.get({ pure: true }))
       }
     },
-    // articles: {
-    //   type: articleConnection,
-    //   args: connectionArgs,
-    //   resolve: (root, args) => connectionFromArray(Article.findAll(), args),
-    // },
+    articles: {
+      type: new GraphQLList(ArticleType),
+      resolve: (root) => Article.findAll()
+    },
+
     // comment: {
     //   type: CommentType,
     //   args: defaultArgs(Comment),
@@ -122,60 +121,60 @@ const RootQueryType = new GraphQLObjectType({
   }),
 })
 
-// const RootMutationType = new GraphQLObjectType({
-//   name: 'RootMutation',
-//   fields: {
-//     writeArticle: {
-//       type: ArticleType,
-//       args: {
-//         article: { type: ArticleInputType }
-//       },
-//       resolve: (root, { article }) => {
-//         return Article.create(article)
-//       }
-//     },
-//     updateArticle: {
-//       type: ArticleType,
-//       args: {
-//         id: { type: GraphQLID },
-//         article: { type: ArticleInputType },
-//       },
-//       resolve: (root, { id, article }) => {
-//         return Article.findById(id).then(instance => instance.update(article))
-//       },
-//     },
-//     deleteArticle: {
-//       type: ArticleType,
-//       args: {
-//         id: { type: GraphQLID },
-//       },
-//       resolve: (root, { id }) => Article.findById(id).then(instance => instance.destroy()),
-//     },
-//     createComment: {
-//       type: CommentType,
-//       args: {
-//         comment: { type: CommentInputType },
-//         articleId: { type: GraphQLID },
-//       },
-//       resolve: (root, { comment, articleId }) => Comment.create(Object.assign({}, comment, { articleId }))
-//     },
-//     updateComment: {
-//       type: CommentType,
-//       args: {
-//         id: { type: GraphQLID },
-//         comment: { type: CommentInputType },
-//       },
-//       resolve: (root, { id, comment }) => Comment.findById(id).then(instance => instance.update(comment)),
-//     },
-//     deleteComment: {
-//       type: CommentType,
-//       args: {
-//         id: { type: GraphQLID },
-//       },
-//       resolve: (root, { id }) => Comment.findById(id).then(instance => instance.destory()),
-//     }
-//   }
-// })
+const RootMutationType = new GraphQLObjectType({
+  name: 'RootMutation',
+  fields: {
+    writeArticle: {
+      type: ArticleType,
+      args: {
+        article: { type: ArticleInputType }
+      },
+      resolve: (root, { article }) => {
+        return Article.create(article)
+      }
+    },
+    updateArticle: {
+      type: ArticleType,
+      args: {
+        id: { type: GraphQLID },
+        article: { type: ArticleInputType },
+      },
+      resolve: (root, { id, article }) => {
+        return Article.findById(id).then(instance => instance.update(article))
+      },
+    },
+    deleteArticle: {
+      type: ArticleType,
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (root, { id }) => Article.findById(id).then(instance => instance.destroy()),
+    },
+    createComment: {
+      type: CommentType,
+      args: {
+        comment: { type: CommentInputType },
+        articleId: { type: GraphQLID },
+      },
+      resolve: (root, { comment, articleId }) => Comment.create(Object.assign({}, comment, { articleId }))
+    },
+    updateComment: {
+      type: CommentType,
+      args: {
+        id: { type: GraphQLID },
+        comment: { type: CommentInputType },
+      },
+      resolve: (root, { id, comment }) => Comment.findById(id).then(instance => instance.update(comment)),
+    },
+    deleteComment: {
+      type: CommentType,
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (root, { id }) => Comment.findById(id).then(instance => instance.destory()),
+    }
+  }
+})
 
 const rootSchema = new GraphQLSchema({
   query: RootQueryType,
